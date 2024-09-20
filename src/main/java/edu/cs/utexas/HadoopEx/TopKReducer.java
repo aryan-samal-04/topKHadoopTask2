@@ -18,7 +18,7 @@ import java.util.Iterator;
 
 public class TopKReducer extends  Reducer<Text, FloatWritable, Text, FloatWritable> {
 
-    private PriorityQueue<WordAndCount> pq = new PriorityQueue<WordAndCount>(10);;
+    private PriorityQueue<WordAndCount> pq = new PriorityQueue<WordAndCount>(3);;
 
 
     private Logger logger = Logger.getLogger(TopKReducer.class);
@@ -59,7 +59,7 @@ public class TopKReducer extends  Reducer<Text, FloatWritable, Text, FloatWritab
        }
 
        // keep the priorityQueue size <= heapSize
-       while (pq.size() > 10) {
+       while (pq.size() > 3) {
            pq.poll();
        }
 
@@ -71,7 +71,7 @@ public class TopKReducer extends  Reducer<Text, FloatWritable, Text, FloatWritab
         logger.info("TopKReducer cleanup cleanup.");
         logger.info("pq.size() is " + pq.size());
 
-        List<WordAndCount> values = new ArrayList<WordAndCount>(10);
+        List<WordAndCount> values = new ArrayList<WordAndCount>(3);
 
         while (pq.size() > 0) {
             values.add(pq.poll());
@@ -87,10 +87,8 @@ public class TopKReducer extends  Reducer<Text, FloatWritable, Text, FloatWritab
 
         for (WordAndCount value : values) {
             context.write(value.getWord(), value.getRatio());
-            logger.info("TopKReducer - Top-10 Words are:  " + value.getWord() + "  Count:"+ value.getRatio());
+            logger.info("TopKReducer - Top-3 Words are:  " + value.getWord() + "  Count:"+ value.getRatio());
         }
-
-
     }
 
 }
